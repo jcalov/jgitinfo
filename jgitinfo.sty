@@ -1,0 +1,67 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{jgitinfo}[2018/07/14 v1.0 Customized configuration for gitinfo2 package]
+
+
+\RequirePackage{kvoptions}
+
+\RequirePackage[
+	dirty={THIS DOCUMENT VERSION IS NOT COMMITTED TO GIT REPOSITORY},
+	mark,
+	markifdirty,
+]
+{gitinfo2}
+\renewcommand{\gitMarkFormat}{\color{gray}\scriptsize\sffamily}
+
+\RequirePackage{ifthen}
+
+% silent if git or git hooks are not correct
+\DeclareBoolOption{silent}
+\DeclareComplementaryOption{verbose}{silent}
+
+\newcommand{\jgitinfoNotUnderVersionControl}{
+	\textcolor{red}{THIS DOCUMENT IS NOT UNDER GIT VERSION CONTROL OR GIT HOOKS ARE NOT INSTALLED}\\
+	You can use \texttt{silent} option of package \texttt{jgitinfo}\\
+	-- OR --\\
+	read the manual for package \texttt{gitinfo2} to get to know how to setup git hooks.
+}
+
+\ProcessKeyvalOptions*{}
+
+% Latest Release
+\newcommand{\jgitinfoRelease}{}
+\ifthenelse{
+	\equal{\gitRel}{}
+}{
+	\renewcommand{\jgitinfoRelease}{}
+}{
+	\renewcommand{\jgitinfoRelease}{$\vert$ latest release: \gitRel\ $\vert$ commits since release: \gitRoff}
+	\ifthenelse{\equal{\gitRoff}{\string 0}}{\renewcommand{\jgitinfoRelease}{$\vert$ release: \gitRel}}{}
+}
+
+
+\ifthenelse{
+		\equal{\gitBranch}{\string (None)}
+	}{
+		\ifthenelse{
+			\boolean{jgitinfo@silent}
+		}{
+			\renewcommand{\gitMarkPref}{\renewcommand{\textbullet}{}}
+			\renewcommand{\gitMark}{\renewcommand{\textbullet}{\textbullet}}
+		}{
+			\renewcommand{\gitMarkFormat}{\color{blue}\sffamily}
+			\renewcommand{\gitMarkPref}{\renewcommand{\textbullet}{}}
+			\renewcommand{\gitMark}{\jgitinfoNotUnderVersionControl\renewcommand{\textbullet}{\textbullet}}
+		}
+	}{
+		\newcommand{\jgitInfoDirty}{{\color{red}\Large\gitDirty}\ \\}
+		\ifthenelse{\boolean{jgitinfo@silent}}{\renewcommand{\jgitInfoDirty}{Dirty $\vert$\ }}{}
+		\renewcommand{\gitMarkPref}{\renewcommand{\textbullet}{}}
+		\renewcommand{\gitMark}{\jgitInfoDirty
+			git info
+			$\vert$\ 
+			branch: \gitBranch
+			\ $\vert$\ 
+			commit: \gitAbbrevHash\ (\gitCommitterIsoDate)
+			\jgitinfoRelease\renewcommand{\textbullet}{\textbullet}
+	}
+}
