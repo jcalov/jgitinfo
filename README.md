@@ -25,6 +25,7 @@ How you configure this in [TexStudio](https://www.texstudio.org) ist described i
 
 ## Installation
 
+* Copy the file `jgitinfo.sty` into the main directory of your latex document
 * Copy the files from the repo folder `git_hooks` into your local repository folder `.git/hooks/`
 * Make the files executable, e.g. with `chmod 755 .git/hooks/post-*`
 * Ensure that you invoke one of the hooks before compiling your latex document (see previous section)
