@@ -31,3 +31,39 @@ How you configure this in [TexStudio](https://www.texstudio.org) ist described i
 * Ensure that you invoke one of the hooks before compiling your latex document (see previous section)
 
 For more information see the [package documentation](http://mirrors.ctan.org/macros/latex/contrib/gitinfo2/gitinfo2.pdf) for the [gitinfo2](https://ctan.org/pkg/gitinfo2) package.
+
+Copy paste installation on Linux systems (just select what you need...):
+
+```
+# change directory
+cd /path/to/your/latex/project/folder/
+
+# initialize git repo
+git init
+
+# fetch .gitignore
+wget https://raw.githubusercontent.com/nachos-con-queso/jgitinfo/master/.gitignore
+
+# fetch latex package jgitinfo
+wget https://raw.githubusercontent.com/nachos-con-queso/jgitinfo/master/jgitinfo.sty
+
+# stage
+git add .gitignore jgitinfo.sty
+
+# commit
+git commit -m "Initial commit"
+
+# change directory for installing git hooks
+cd .git/hooks/
+
+# fetch git hooks for jgitinfo
+wget https://raw.githubusercontent.com/nachos-con-queso/jgitinfo/master/git_hooks/post-checkout
+wget https://raw.githubusercontent.com/nachos-con-queso/jgitinfo/master/git_hooks/post-commit
+wget https://raw.githubusercontent.com/nachos-con-queso/jgitinfo/master/git_hooks/post-merge
+
+# make git hooks executable
+chmod 755 post-*
+
+# go back to working directory
+cd ../../
+```
